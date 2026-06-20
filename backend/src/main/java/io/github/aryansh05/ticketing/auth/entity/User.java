@@ -1,0 +1,61 @@
+package io.github.aryansh05.ticketing.auth.entity;
+
+import java.time.Instant;
+import java.util.UUID;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import com.github.f4b6a3.uuid.UuidCreator;
+
+import io.github.aryansh05.ticketing.auth.constant.AuthProvider;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
+@Entity
+@Table(name = "users")
+public class User {
+    @Id
+    @Builder.Default
+    @Column(name = "user_id")
+    private UUID id = UuidCreator.getTimeOrderedEpoch();
+
+    @Column(name = "user_full_name", nullable = false, length = 100)
+    private String fullName;
+    @Column(name = "user_email", nullable = false, unique = true)
+    private String email;
+    @Column(name = "user_password_hash")
+    private String passwordHash;
+
+    @Builder.Default
+    @Column(name = "user_active", nullable = false)
+    private boolean active = true;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Builder.Default
+    @Column(name = "user_auth_provider", nullable = false)
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+
+    @Builder.Default
+    @Column(name = "user_created_at", nullable = false, updatable = false)
+    private Instant createdAt = Instant.now();
+    @Builder.Default
+    @Column(name = "user_updated_at", nullable = false)
+    private Instant updatedAt = Instant.now();
+}
