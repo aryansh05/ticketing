@@ -1,5 +1,7 @@
 package io.github.aryansh05.ticketing.auth.controller;
 
+import io.github.aryansh05.ticketing.auth.dto.request.LoginRequest;
+import io.github.aryansh05.ticketing.auth.dto.response.LoginResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,5 +25,11 @@ public class AuthController {
     public ResponseEntity<ApiSuccessResponse> register(@Valid @RequestBody RegisterRequest request) {
         ApiSuccessResponse response = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        LoginResponse response = authService.login(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

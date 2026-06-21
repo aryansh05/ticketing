@@ -1,5 +1,12 @@
 package io.github.aryansh05.ticketing.auth.service;
 
+import io.github.aryansh05.ticketing.auth.dto.request.LoginRequest;
+import io.github.aryansh05.ticketing.auth.dto.response.LoginResponse;
+import io.github.aryansh05.ticketing.auth.dto.response.UserResponse;
+import io.github.aryansh05.ticketing.auth.security.JwtUtil;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     public ApiSuccessResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) throw new EmailAlreadyExistsException();
@@ -27,6 +36,28 @@ public class AuthService {
         return new ApiSuccessResponse(
                 true,
                 "User registered successfully"
+        );
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
+        User user = (User) authentication.getPrincipal();
+        String userId = user.getId().toString();
+        String accessToken = jwtUtil.generateAccessToken(userId);
+        UserResponse userResponse = new UserResponse(
+                userId,
+                user.getFullName(),
+                user.getEmail(),
+                user.getAuthProvider().name()
+        );
+        return new LoginResponse(
+                accessToken,
+                userResponse
         );
     }
 }

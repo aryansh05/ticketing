@@ -1,6 +1,8 @@
 package io.github.aryansh05.ticketing.auth.entity;
 
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.JdbcTypeCode;
@@ -20,6 +22,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
@@ -29,7 +34,7 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @Builder.Default
     @Column(name = "user_id")
@@ -58,4 +63,19 @@ public class User {
     @Builder.Default
     @Column(name = "user_updated_at", nullable = false)
     private Instant updatedAt = Instant.now();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return getPasswordHash();
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
 }
