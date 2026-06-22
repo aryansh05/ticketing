@@ -1,4 +1,4 @@
-package io.github.aryansh05.ticketing.shared.exceptions;
+package io.github.aryansh05.ticketing.shared.exception;
 
 import io.github.aryansh05.ticketing.shared.dto.response.ApiErrorResponse;
 import org.springframework.http.HttpStatus;

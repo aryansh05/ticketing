@@ -1,4 +1,4 @@
-package io.github.aryansh05.ticketing.auth.entity;
+package io.github.aryansh05.ticketing.user.domain.entity;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -10,7 +10,6 @@ import org.hibernate.type.SqlTypes;
 
 import com.github.f4b6a3.uuid.UuidCreator;
 
-import io.github.aryansh05.ticketing.auth.constant.AuthProvider;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -2,7 +2,7 @@ package io.github.aryansh05.ticketing.auth.service;
 
 import io.github.aryansh05.ticketing.auth.dto.request.LoginRequest;
 import io.github.aryansh05.ticketing.auth.dto.response.LoginResponse;
-import io.github.aryansh05.ticketing.auth.dto.response.UserResponse;
+import io.github.aryansh05.ticketing.user.dto.response.UserResponse;
 import io.github.aryansh05.ticketing.auth.security.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 import io.github.aryansh05.ticketing.auth.dto.request.RegisterRequest;
 import io.github.aryansh05.ticketing.shared.dto.response.ApiSuccessResponse;
-import io.github.aryansh05.ticketing.auth.entity.User;
-import io.github.aryansh05.ticketing.shared.exceptions.EmailAlreadyExistsException;
-import io.github.aryansh05.ticketing.auth.repository.UserRepository;
+import io.github.aryansh05.ticketing.user.domain.entity.User;
+import io.github.aryansh05.ticketing.shared.exception.EmailAlreadyExistsException;
+import io.github.aryansh05.ticketing.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service

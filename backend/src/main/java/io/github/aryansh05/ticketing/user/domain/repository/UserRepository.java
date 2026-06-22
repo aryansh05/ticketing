@@ -1,4 +1,4 @@
-package io.github.aryansh05.ticketing.auth.repository;
+package io.github.aryansh05.ticketing.user.domain.repository;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import io.github.aryansh05.ticketing.auth.entity.User;
+import io.github.aryansh05.ticketing.user.domain.entity.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {

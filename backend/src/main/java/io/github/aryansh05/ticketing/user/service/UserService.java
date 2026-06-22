@@ -1,8 +1,8 @@
-package io.github.aryansh05.ticketing.auth.service;
+package io.github.aryansh05.ticketing.user.service;
 
-import io.github.aryansh05.ticketing.auth.dto.response.UserResponse;
-import io.github.aryansh05.ticketing.auth.entity.User;
-import io.github.aryansh05.ticketing.auth.repository.UserRepository;
+import io.github.aryansh05.ticketing.user.dto.response.UserResponse;
+import io.github.aryansh05.ticketing.user.domain.entity.User;
+import io.github.aryansh05.ticketing.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;

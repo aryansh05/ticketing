@@ -1,6 +1,6 @@
 package io.github.aryansh05.ticketing.auth.service;
 
-import io.github.aryansh05.ticketing.auth.repository.UserRepository;
+import io.github.aryansh05.ticketing.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

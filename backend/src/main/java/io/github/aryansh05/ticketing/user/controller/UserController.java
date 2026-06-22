@@ -1,7 +1,7 @@
-package io.github.aryansh05.ticketing.auth.controller;
+package io.github.aryansh05.ticketing.user.controller;
 
-import io.github.aryansh05.ticketing.auth.dto.response.UserResponse;
-import io.github.aryansh05.ticketing.auth.service.UserService;
+import io.github.aryansh05.ticketing.user.dto.response.UserResponse;
+import io.github.aryansh05.ticketing.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

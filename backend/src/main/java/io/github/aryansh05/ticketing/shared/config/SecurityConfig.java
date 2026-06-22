@@ -1,7 +1,7 @@
 package io.github.aryansh05.ticketing.shared.config;
 
 import io.github.aryansh05.ticketing.auth.security.JwtAuthenticationFilter;
-import io.github.aryansh05.ticketing.shared.exceptions.JwtAuthenticationEntryPoint;
+import io.github.aryansh05.ticketing.shared.exception.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

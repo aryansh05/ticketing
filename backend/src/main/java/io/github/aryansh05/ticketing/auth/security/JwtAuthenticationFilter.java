@@ -1,6 +1,6 @@
 package io.github.aryansh05.ticketing.auth.security;
 
-import io.github.aryansh05.ticketing.auth.repository.UserRepository;
+import io.github.aryansh05.ticketing.user.domain.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
