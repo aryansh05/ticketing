@@ -20,17 +20,20 @@ public class JwtUtil {
     private final PublicKey publicKey;
     private final String issuer;
     private final long accessTtlSeconds;
+    private final long refreshTtlSeconds;
 
     public JwtUtil(
             @Value("${security.jwt.private-key}") String jwtPrivateKey,
             @Value("${security.jwt.public-key}") String jwtPublicKey,
             @Value("${security.jwt.issuer}") String issuer,
-            @Value("${security.jwt.access-ttl-seconds}") long accessTtlSeconds
+            @Value("${security.jwt.access-ttl-seconds}") long accessTtlSeconds,
+            @Value("${security.jwt.refresh-ttl-seconds}") long refreshTtlSeconds
     ) throws Exception {
         this.privateKey = loadPrivateKey(jwtPrivateKey);
         this.publicKey = loadPublicKey(jwtPublicKey);
         this.issuer = issuer;
         this.accessTtlSeconds = accessTtlSeconds;
+        this.refreshTtlSeconds = refreshTtlSeconds;
     }
 
     private PrivateKey loadPrivateKey(String key) throws Exception {
@@ -58,6 +61,18 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateRefreshToken(String jti, String userId) {
+        return Jwts.builder()
+                .id(jti)
+                .subject(userId)
+                .issuer(issuer)
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plusSeconds(refreshTtlSeconds)))
+                .claim("type", "refresh")
+                .signWith(privateKey, Jwts.SIG.EdDSA)
+                .compact();
+    }
+
     public Claims extractClaims(String token) {
         return Jwts.parser()
                 .verifyWith(publicKey)
@@ -73,10 +88,6 @@ public class JwtUtil {
         } catch (Exception e) {
             return false;
         }
-    }
-
-    public boolean isAccessToken(String token) {
-        return "access".equals(extractClaims(token).get("type"));
     }
 
     public String getUserId(String token) {

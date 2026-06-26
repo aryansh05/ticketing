@@ -65,20 +65,6 @@ public class GlobalExceptionHandler {
                 ));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiErrorResponse> handleIllegalArgumentException(
-            IllegalArgumentException ex) {
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ApiErrorResponse(
-                        false,
-                        HttpStatus.BAD_REQUEST.value(),
-                        HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                        "Invalid Arguments",
-                        null
-                ));
-    }
-
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ApiErrorResponse> handleEmailAlreadyExistsException(
             EmailAlreadyExistsException ex) {

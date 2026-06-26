@@ -1,7 +1,9 @@
 package io.github.aryansh05.ticketing.auth.controller;
 
 import io.github.aryansh05.ticketing.auth.dto.request.LoginRequest;
+import io.github.aryansh05.ticketing.auth.dto.request.RefreshTokenRequest;
 import io.github.aryansh05.ticketing.auth.dto.response.LoginResponse;
+import io.github.aryansh05.ticketing.auth.dto.response.RefreshTokenResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +32,18 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = authService.login(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
+        RefreshTokenResponse response = authService.refresh(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiSuccessResponse> logout(@Valid @RequestBody RefreshTokenRequest request) {
+        ApiSuccessResponse response = authService.logout(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
