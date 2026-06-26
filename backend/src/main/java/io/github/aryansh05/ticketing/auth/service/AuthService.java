@@ -39,6 +39,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
+
     @Value("${security.jwt.refresh-ttl-seconds}")
     private long refreshTtlSeconds;
 
