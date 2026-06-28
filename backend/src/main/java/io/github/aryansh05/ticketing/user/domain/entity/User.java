@@ -1,29 +1,21 @@
 package io.github.aryansh05.ticketing.user.domain.entity;
 
+import com.github.f4b6a3.uuid.UuidCreator;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
-import com.github.f4b6a3.uuid.UuidCreator;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.jspecify.annotations.Nullable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
@@ -50,7 +42,6 @@ public class User implements UserDetails {
     @Column(name = "user_active", nullable = false)
     private boolean active = true;
 
-    @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Builder.Default
     @Column(name = "user_auth_provider", nullable = false)
@@ -76,5 +67,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return getEmail();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
     }
 }

@@ -2,12 +2,17 @@ package io.github.aryansh05.ticketing.auth.controller;
 
 import io.github.aryansh05.ticketing.auth.dto.request.LoginRequest;
 import io.github.aryansh05.ticketing.auth.dto.request.RefreshTokenRequest;
+import io.github.aryansh05.ticketing.auth.dto.request.RegisterRequest;
 import io.github.aryansh05.ticketing.auth.dto.response.LoginResponse;
 import io.github.aryansh05.ticketing.auth.dto.response.LoginResults;
 import io.github.aryansh05.ticketing.auth.dto.response.RefreshTokenResponse;
 import io.github.aryansh05.ticketing.auth.dto.response.RefreshTokenResults;
+import io.github.aryansh05.ticketing.auth.service.AuthService;
+import io.github.aryansh05.ticketing.shared.dto.response.ApiSuccessResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,12 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.github.aryansh05.ticketing.auth.dto.request.RegisterRequest;
-import io.github.aryansh05.ticketing.shared.dto.response.ApiSuccessResponse;
-import io.github.aryansh05.ticketing.auth.service.AuthService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.util.WebUtils;
 
 @RestController
@@ -72,7 +71,7 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<RefreshTokenResults> refresh(HttpServletRequest req) {
         Cookie cookie = WebUtils.getCookie(req, refreshTokenCookieName);
-        if(cookie == null) throw new BadCredentialsException("");
+        if(cookie == null || cookie.getValue().isBlank()) throw new BadCredentialsException("");
         RefreshTokenRequest request = new RefreshTokenRequest(cookie.getValue());
         RefreshTokenResponse response = authService.refresh(request);
         ResponseCookie responseCookie = ResponseCookie.from(refreshTokenCookieName, response.refreshToken())
@@ -92,7 +91,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<ApiSuccessResponse> logout(HttpServletRequest req) {
         Cookie cookie = WebUtils.getCookie(req, refreshTokenCookieName);
-        if(cookie == null) throw new BadCredentialsException("");
+        if(cookie == null || cookie.getValue().isBlank()) throw new BadCredentialsException("");
         RefreshTokenRequest request = new RefreshTokenRequest(cookie.getValue());
         ApiSuccessResponse response = authService.logout(request);
         ResponseCookie responseCookie = ResponseCookie.from(refreshTokenCookieName, "")

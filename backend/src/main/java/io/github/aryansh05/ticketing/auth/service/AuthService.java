@@ -4,14 +4,20 @@ import io.github.aryansh05.ticketing.auth.domain.entity.RefreshToken;
 import io.github.aryansh05.ticketing.auth.domain.repository.RefreshTokenRepository;
 import io.github.aryansh05.ticketing.auth.dto.request.LoginRequest;
 import io.github.aryansh05.ticketing.auth.dto.request.RefreshTokenRequest;
+import io.github.aryansh05.ticketing.auth.dto.request.RegisterRequest;
 import io.github.aryansh05.ticketing.auth.dto.response.LoginResponse;
 import io.github.aryansh05.ticketing.auth.dto.response.RefreshTokenResponse;
-import io.github.aryansh05.ticketing.shared.exception.ResourceNotFoundException;
-import io.github.aryansh05.ticketing.user.dto.response.UserResponse;
 import io.github.aryansh05.ticketing.auth.security.JwtUtil;
+import io.github.aryansh05.ticketing.shared.dto.response.ApiSuccessResponse;
+import io.github.aryansh05.ticketing.shared.exception.ResourceAlreadyExistsException;
+import io.github.aryansh05.ticketing.shared.exception.ResourceNotFoundException;
+import io.github.aryansh05.ticketing.user.domain.entity.User;
+import io.github.aryansh05.ticketing.user.domain.repository.UserRepository;
+import io.github.aryansh05.ticketing.user.dto.response.UserResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,13 +25,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import io.github.aryansh05.ticketing.auth.dto.request.RegisterRequest;
-import io.github.aryansh05.ticketing.shared.dto.response.ApiSuccessResponse;
-import io.github.aryansh05.ticketing.user.domain.entity.User;
-import io.github.aryansh05.ticketing.shared.exception.EmailAlreadyExistsException;
-import io.github.aryansh05.ticketing.user.domain.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -44,7 +43,7 @@ public class AuthService {
     private long refreshTtlSeconds;
 
     public ApiSuccessResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.email())) throw new EmailAlreadyExistsException();
+        if (userRepository.existsByEmail(request.email())) throw new ResourceAlreadyExistsException("Email already exists");
         User user = User.builder()
                 .fullName(request.fullName())
                 .email(request.email())
@@ -83,10 +82,10 @@ public class AuthService {
         refreshTokenRepository.save(refreshTokenObj);
 
         UserResponse userResponse = new UserResponse(
-                userId,
+                id,
                 user.getFullName(),
                 user.getEmail(),
-                user.getAuthProvider().name()
+                user.getAuthProvider()
         );
         return new LoginResponse(
                 accessToken,
