@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: ticketing
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  
+  flyway:
+    enabled: true
+
+security:
+  jwt:
+    private-key: ${JWT_PRIVATE_KEY}
+    public-key: ${JWT_PUBLIC_KEY}
+    issuer: ${JWT_ISSUER}
+    access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS}
+    refresh-ttl-seconds: ${JWT_REFRESH_TTL_SECONDS}
+    refresh-token-cookie-name: ${JWT_REFRESH_COOKIE_NAME}
+    cookie-secure: ${JWT_COOKIE_SECURE}
+    cookie-http-only: ${JWT_COOKIE_HTTP_ONLY}
+    cookie-same-site: ${JWT_COOKIE_SAME_SITE}
+    cookie-domain: ${JWT_COOKIE_DOMAIN}
