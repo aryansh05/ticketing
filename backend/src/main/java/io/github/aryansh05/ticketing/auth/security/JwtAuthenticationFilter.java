@@ -1,5 +1,6 @@
 package io.github.aryansh05.ticketing.auth.security;
 
+import io.github.aryansh05.ticketing.user.domain.entity.User;
 import io.github.aryansh05.ticketing.user.domain.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -38,15 +39,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String userId = jwtUtil.getUserId(token);
         UUID id = UUID.fromString(userId);
-        if (!userRepository.existsById(id)) {
+
+        User u = userRepository.findById(id).orElse(null);
+        if (u == null || !u.isActive()) {
             filterChain.doFilter(request, response);
             return;
         }
 
+        UserPrincipal user = new UserPrincipal(
+                u.getId(),
+                u.getFullName(),
+                u.getEmail(),
+                u.getAuthProvider()
+        );
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                id,
+                user,
                 null,
-                Collections.emptyList()
+                List.of()
         );
         authentication.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(request)
