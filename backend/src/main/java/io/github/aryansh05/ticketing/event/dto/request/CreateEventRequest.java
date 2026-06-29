@@ -21,7 +21,7 @@ public record CreateEventRequest(
 ) {
     public CreateEventRequest{
         if(startTime != null && endTime != null && !endTime.isAfter(startTime)){
-            throw new IllegalArgumentException("Start time must be after end time");
+            throw new IllegalArgumentException("End time must be after start time");
         }
 
         if (title != null) {

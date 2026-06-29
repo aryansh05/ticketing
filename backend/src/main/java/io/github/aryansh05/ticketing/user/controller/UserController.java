@@ -2,6 +2,7 @@ package io.github.aryansh05.ticketing.user.controller;
 
 import io.github.aryansh05.ticketing.auth.security.UserPrincipal;
 import io.github.aryansh05.ticketing.user.dto.response.UserResponse;
+import io.github.aryansh05.ticketing.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
+    private final UserService userService;
+
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> me(@AuthenticationPrincipal UserPrincipal req) {
-        UserResponse response = new UserResponse(
-                req.id(),
-                req.fullName(),
-                req.email(),
-                req.authProvider()
-        );
+    public ResponseEntity<UserResponse> getMe() {
+        UserResponse response = userService.getMe();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

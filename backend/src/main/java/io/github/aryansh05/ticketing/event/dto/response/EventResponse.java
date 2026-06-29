@@ -17,11 +17,11 @@ public record EventResponse(
         String title,
         String description,
 
-        Instant startTime,
-        Instant endTime,
-
         EventCategory category,
         EventStatus status,
-        EventVisibility visibility
+        EventVisibility visibility,
+
+        Instant startTime,
+        Instant endTime
 ) {
 }

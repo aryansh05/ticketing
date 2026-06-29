@@ -5,10 +5,18 @@ import io.github.aryansh05.ticketing.auth.security.UserPrincipal;
 import io.github.aryansh05.ticketing.event.domain.entity.Event;
 import io.github.aryansh05.ticketing.event.domain.repository.EventRepository;
 import io.github.aryansh05.ticketing.event.dto.request.CreateEventRequest;
+import io.github.aryansh05.ticketing.event.dto.request.UpdateEventRequest;
+import io.github.aryansh05.ticketing.event.dto.response.EventResponse;
 import io.github.aryansh05.ticketing.shared.dto.response.ApiSuccessResponse;
+import io.github.aryansh05.ticketing.shared.exception.OwnershipException;
 import io.github.aryansh05.ticketing.shared.exception.ResourceAlreadyExistsException;
+import io.github.aryansh05.ticketing.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +43,57 @@ public class EventService {
         );
     }
 
+    public List<EventResponse> getAllMyEvents(){
+        UserPrincipal user = authenticatedUser.getAuthenticatedUser();
+        return eventRepository.findByUserId(user.id())
+                .stream()
+                .map(event -> new EventResponse(
+                        event.getId(),
+                        event.getUserId(),
+                        event.getTitle(),
+                        event.getDescription(),
+                        event.getCategory(),
+                        event.getStatus(),
+                        event.getVisibility(),
+                        event.getStartTime(),
+                        event.getEndTime()
+                ))
+                .toList();
+    }
 
+    public ApiSuccessResponse updateEvent(UpdateEventRequest request, UUID eventId){
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+        UserPrincipal user = authenticatedUser.getAuthenticatedUser();
+
+        if(!event.getUserId().equals(user.id())) throw new OwnershipException("You can only modify your own events");
+
+        if(request.title() != null) event.setTitle(request.title());
+        if(request.description() != null) event.setDescription(request.description());
+        if(request.category() != null) event.setCategory(request.category());
+        if(request.status() != null) event.setStatus(request.status());
+        if(request.visibility() != null) event.setVisibility(request.visibility());
+        if(request.startTime() != null) event.setStartTime(request.startTime());
+        if(request.endTime() != null) event.setEndTime(request.endTime());
+
+        event.setUpdatedAt(Instant.now());
+
+        eventRepository.save(event);
+
+        return new ApiSuccessResponse(
+                true,
+                "Event updated successfully");
+    }
+
+    public ApiSuccessResponse deleteEvent(UUID eventId){
+       Event event = eventRepository.findById(eventId)
+               .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+       UserPrincipal user = authenticatedUser.getAuthenticatedUser();
+       if(!event.getUserId().equals(user.id())) throw new OwnershipException("You can only delete your own events");
+       eventRepository.delete(event);
+       return new ApiSuccessResponse(
+               true,
+               "Event deleted successfully"
+       );
+    }
 
 }

@@ -90,7 +90,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<ApiErrorResponse> handleEmailAlreadyExistsException(
+    public ResponseEntity<ApiErrorResponse> handleResourceAlreadyExistsException(
             ResourceAlreadyExistsException ex) {
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -98,6 +98,18 @@ public class GlobalExceptionHandler {
                         false,
                         HttpStatus.CONFLICT.value(),
                         HttpStatus.CONFLICT.getReasonPhrase(),
+                        ex.getMessage(),
+                        null
+                ));
+    }
+
+    @ExceptionHandler(OwnershipException.class)
+    public ResponseEntity<ApiErrorResponse> handleOwnershipException(OwnershipException ex){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ApiErrorResponse(
+                        false,
+                        HttpStatus.FORBIDDEN.value(),
+                        HttpStatus.FORBIDDEN.getReasonPhrase(),
                         ex.getMessage(),
                         null
                 ));
