@@ -1,10 +1,11 @@
+import router from "@/app/AppRouter.tsx";
+import {RouterProvider} from "react-router";
+
 function App() {
 
   return (
     <>
-      <h1 className="flex justify-center text-4xl font-bold">
-          Welcome to Ticketing
-      </h1>
+        <RouterProvider router={router} />
     </>
   )
 }
