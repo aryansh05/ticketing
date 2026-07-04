@@ -2,9 +2,8 @@ import type {RegisterRequest} from "@/features/auth/authType.ts";
 import {type ChangeEvent, useState} from "react";
 import {register} from "@/features/auth/authService.ts";
 import {toast} from "sonner";
-import {useNavigate} from "react-router";
 
-export default function useRegister(){
+export default function useRegister(onSuccess: () => void){
     const [formData, setFormData] = useState<RegisterRequest>({
         fullName: "",
         email: "",
@@ -12,7 +11,6 @@ export default function useRegister(){
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const navigate = useNavigate();
 
     function handleChange(e : ChangeEvent<HTMLInputElement>) {
         const {
@@ -40,7 +38,7 @@ export default function useRegister(){
                 email: "",
                 password: ""
             }))
-            navigate("/auth/login");
+            onSuccess();
         }catch (error: any){
             const errorMessage = error?.response?.data?.message ?? "Registration failed";
             setError(errorMessage);

@@ -1,9 +1,11 @@
-import {createBrowserRouter, Navigate} from "react-router";
+import {createBrowserRouter} from "react-router";
 import AppLayout from "@/app/AppLayout";
-import HomePage from "@/features/Home/HomePage.tsx";
-import AuthLayout from "@/features/auth/AuthLayout.tsx";
-import LoginPage from "@/features/auth/LoginPage.tsx";
-import RegisterPage from "@/features/auth/RegisterPage.tsx";
+import HomePage from "@/features/home/HomePage.tsx";
+import Events from "@/features/events/Events.tsx";
+import Dining from "@/features/dining/Dining.tsx";
+import Movies from "@/features/movies/Movies.tsx";
+import Play from "@/features/plays/Play.tsx";
+import All from "@/features/all/All.tsx";
 
 const router = createBrowserRouter([
     {
@@ -13,27 +15,29 @@ const router = createBrowserRouter([
             {
                 index: true,
                 element: <HomePage />
-            }
+            },
+            {
+                path: "all",
+                element: <All />
+            },
+            {
+                path: "events",
+                element: <Events />
+            },
+            {
+                path: "plays",
+                element: <Play />
+            },
+            {
+                path: "dining",
+                element: <Dining />
+            },            {
+                path: "movies",
+                element: <Movies />
+            },
+
         ]
     },
-    {
-        path: "/auth",
-        element: <AuthLayout />,
-        children: [
-            {
-              index: true,
-              element: <Navigate to="login" replace />
-            },
-            {
-                path: "login",
-                element: <LoginPage />
-            },
-            {
-                path: "register",
-                element: <RegisterPage />
-            }
-        ]
-    }
 ])
 
 export default router;

@@ -26,3 +26,14 @@ export type LoginResponse = {
     user: User
 }
 
+export type LoginProps = {
+    onRegisterClick: () => void;
+    onLoginSuccess: () => void;
+};
+
+export type RegisterProps = {
+    onLoginClick: () => void;
+}
+export type AuthDialogContent = {
+    onLoginSuccess: () => void;
+};

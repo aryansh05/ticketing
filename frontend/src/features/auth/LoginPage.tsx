@@ -7,20 +7,20 @@ import {ErrorIcon} from "react-hot-toast";
 import {Button} from "@/shared/components/ui/button.tsx";
 import {Spinner} from "@/shared/components/ui/spinner.tsx";
 import OAuth2Buttons from "@/features/auth/OAuth2Buttons.tsx";
-import {Link} from "react-router";
+import type {LoginProps} from "@/features/auth/authType.ts";
 
-function LoginPage(){
+function LoginPage({onRegisterClick,onLoginSuccess} : LoginProps){
     const {
         formData,
         error,
         loading,
         handleChange,
         handleSubmit
-    } = useLogin();
+    } = useLogin(onLoginSuccess);
 
     return(
         <>
-            <main className="w-full max-w-md p-4">
+            <div className="w-full max-w-md">
                 <Card>
                     <CardHeader className="flex flex-col items-center">
                         <CardTitle className="text-lg">Welcome Back</CardTitle>
@@ -94,14 +94,19 @@ function LoginPage(){
                         <div className="flex flex-col items-center w-full gap-4 py-2">
                             <p className="text-sm text-muted-foreground text-center mt-4">
                                 Don't have an account?{" "}
-                                <Link to="/auth/register" className="text-primary hover:underline font-medium">
-                                    <span>Register</span>
-                                </Link>
+                                <button
+                                    type="button"
+                                    onClick={onRegisterClick}
+                                    className="text-primary hover:underline"
+                                >
+                                    Register
+                                </button>
+
                             </p>
                         </div>
                     </CardContent>
                 </Card>
-            </main>
+            </div>
         </>
     )
 }

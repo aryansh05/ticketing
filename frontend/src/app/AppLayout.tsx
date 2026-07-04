@@ -1,13 +1,15 @@
 import {Outlet} from "react-router";
+import Navbar from "@/features/home/navbar/Navbar.tsx";
 
-function AppLayout(){
+function AppLayout() {
     return (
         <>
-            <div>
-                <Outlet />
-            </div>
+            <Navbar/>
+            <main>
+                <Outlet/>
+            </main>
         </>
-    )
+    );
 }
 
 export default AppLayout;

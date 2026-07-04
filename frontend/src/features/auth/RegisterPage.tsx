@@ -7,20 +7,20 @@ import {ErrorIcon} from "react-hot-toast";
 import {LockKeyholeIcon, Mail, User} from "lucide-react";
 import {Spinner} from "@/shared/components/ui/spinner.tsx";
 import OAuth2Buttons from "@/features/auth/OAuth2Buttons.tsx";
-import {Link} from "react-router";
+import type {RegisterProps} from "@/features/auth/authType.ts";
 
-export default function RegisterPage() {
+export default function RegisterPage({onLoginClick} : RegisterProps) {
     const {
         formData,
         loading,
         error,
         handleChange,
         handleSubmit,
-    } = useRegister();
+    } = useRegister(onLoginClick);
 
     return (
         <>
-            <main className="w-full max-w-md p-4">
+            <div className="w-full max-w-md">
                 <Card>
                     <CardHeader className="flex flex-col items-center">
                         <CardTitle className="text-lg">Create your account</CardTitle>
@@ -111,14 +111,18 @@ export default function RegisterPage() {
                         <div className="flex flex-col items-center w-full gap-4 py-2">
                             <p className="text-sm text-muted-foreground text-center mt-4">
                                 Already have an account?{" "}
-                                <Link to="/auth/login" className="text-primary hover:underline font-medium">
-                                    <span>Login</span>
-                                </Link>
+                                <button
+                                    type="button"
+                                    onClick={onLoginClick}
+                                    className="text-primary hover:underline"
+                                >
+                                    Login
+                                </button>
                             </p>
                         </div>
                     </CardContent>
                 </Card>
-            </main>
+            </div>
         </>
     )
 }

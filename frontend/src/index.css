@@ -128,3 +128,32 @@
     @apply font-sans;
     }
 }
+@keyframes sparkle-float {
+    0% {
+        transform: translateY(30px) scale(0.5);
+        opacity: 0;
+    }
+
+    30% {
+        opacity: 0.8;
+    }
+
+    70% {
+        opacity: 0.4;
+    }
+
+    100% {
+        transform: translateY(-150px) scale(1.2);
+        opacity: 0;
+    }
+}
+
+.sparkle {
+    animation-name: sparkle-float;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+
+    box-shadow:
+            0 0 4px currentColor,
+            0 0 10px currentColor;
+}

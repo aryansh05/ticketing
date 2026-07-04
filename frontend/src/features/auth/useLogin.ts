@@ -3,7 +3,7 @@ import type {LoginRequest} from "@/features/auth/authType.ts";
 import {login} from "@/features/auth/authService.ts";
 import {toast} from "sonner";
 
-function useLogin() {
+function useLogin(onSuccess: () => void) {
     const [formData, setFormData] = useState<LoginRequest>({
         email: "",
         password: ""
@@ -39,6 +39,7 @@ function useLogin() {
                 email: "",
                 password: ""
             })
+            onSuccess();
         }catch (error: any){
             const errorMessage = error?.response?.data?.message ?? "Login failed";
             setError(errorMessage);
