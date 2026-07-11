@@ -15,7 +15,7 @@ function Navbar() {
         <header className="sticky top-0 z-50 flex w-full max-w-7xl mx-auto items-center justify-between rounded-4xl border border-white/20 bg-white/10 px-6 py-4 shadow-lg backdrop-blur-md dark:border-white/10 dark:bg-black/20 text-sm overflow-hidden mb-4">
             <div className="flex items-center gap-4">
                 <div>
-                    <Link to="/" className="flex items-center text-2xl font-bold">
+                    <Link to="/" className="flex text-amber-700 items-center text-2xl font-bold">
                         Ticketing
                     </Link>
                     <div className="text-muted-foreground text-xs flex justify-center">

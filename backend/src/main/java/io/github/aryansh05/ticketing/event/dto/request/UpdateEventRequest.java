@@ -4,11 +4,10 @@ import io.github.aryansh05.ticketing.event.domain.entity.EventCategory;
 import io.github.aryansh05.ticketing.event.domain.entity.EventStatus;
 import io.github.aryansh05.ticketing.event.domain.entity.EventVisibility;
 import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public record UpdateEventRequest(
         @Size(max=200)
@@ -25,10 +24,6 @@ public record UpdateEventRequest(
         Instant endTime
 ) {
     public UpdateEventRequest{
-        if(startTime != null && endTime != null && !endTime.isAfter(startTime)){
-            throw new IllegalArgumentException("End time must be after start time");
-        }
-
         if (title != null) {
             title = title.trim();
         }
@@ -36,6 +31,18 @@ public record UpdateEventRequest(
         if (description != null) {
             description = description.trim();
         }
+
+        if (startTime != null) {
+            startTime = startTime.truncatedTo(ChronoUnit.MINUTES);
+        }
+
+        if (endTime != null) {
+            endTime = endTime.truncatedTo(ChronoUnit.MINUTES);
+        }
+        if(startTime != null && endTime != null && !endTime.isAfter(startTime)){
+            throw new IllegalArgumentException("End time must be after start time");
+        }
+
     }
 
 }

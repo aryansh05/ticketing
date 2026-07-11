@@ -26,8 +26,8 @@ public class EventService {
     private final AuthenticatedUser authenticatedUser;
 
     public ApiSuccessResponse createEvent(CreateEventRequest request){
-        if(eventRepository.existsByTitle(request.title())) throw new ResourceAlreadyExistsException("Title already exists");
         UserPrincipal user = authenticatedUser.getAuthenticatedUser();
+        if(eventRepository.existsByTitleAndUserIdAndStartTime(request.title(), user.id(), request.startTime())) throw new ResourceAlreadyExistsException("Title already exists at the requested Time");
         Event event = Event.builder()
                 .title(request.title())
                 .description(request.description())
@@ -61,27 +61,94 @@ public class EventService {
                 .toList();
     }
 
-    public ApiSuccessResponse updateEvent(UpdateEventRequest request, UUID eventId){
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+    public ApiSuccessResponse updateEvent(UpdateEventRequest request, UUID eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "Event not found"
+                        )
+                );
+
         UserPrincipal user = authenticatedUser.getAuthenticatedUser();
 
-        if(!event.getUserId().equals(user.id())) throw new OwnershipException("You can only modify your own events");
+        if (!event.getUserId().equals(user.id())) {
+            throw new OwnershipException(
+                    "You can only modify your own events"
+            );
+        }
 
-        if(request.title() != null) event.setTitle(request.title());
-        if(request.description() != null) event.setDescription(request.description());
-        if(request.category() != null) event.setCategory(request.category());
-        if(request.status() != null) event.setStatus(request.status());
-        if(request.visibility() != null) event.setVisibility(request.visibility());
-        if(request.startTime() != null) event.setStartTime(request.startTime());
-        if(request.endTime() != null) event.setEndTime(request.endTime());
+        String title = event.getTitle();
+        if (request.title() != null) {
+            title = request.title();
+        }
+
+        Instant startTime = event.getStartTime();
+        if (request.startTime() != null) {
+            startTime = request.startTime();
+        }
+
+        Instant endTime = event.getEndTime();
+        if (request.endTime() != null) {
+            endTime = request.endTime();
+        }
+
+        if (!endTime.isAfter(startTime)) {
+            throw new IllegalArgumentException(
+                    "End time must be after start time"
+            );
+        }
+
+        boolean uniqueFieldsChanged = !title.equals(event.getTitle()) || !startTime.equals(event.getStartTime());
+
+        if (uniqueFieldsChanged &&
+                eventRepository
+                        .existsByTitleAndUserIdAndStartTimeAndIdNot(
+                                title,
+                                user.id(),
+                                startTime,
+                                eventId
+                        )) {
+
+            throw new ResourceAlreadyExistsException(
+                    "Event with the same title and start time already exists"
+            );
+        }
+
+        if (request.title() != null) {
+            event.setTitle(title);
+        }
+
+        if (request.description() != null) {
+            event.setDescription(request.description());
+        }
+
+        if (request.category() != null) {
+            event.setCategory(request.category());
+        }
+
+        if (request.status() != null) {
+            event.setStatus(request.status());
+        }
+
+        if (request.visibility() != null) {
+            event.setVisibility(request.visibility());
+        }
+
+        if (request.startTime() != null) {
+            event.setStartTime(startTime);
+        }
+
+        if (request.endTime() != null) {
+            event.setEndTime(endTime);
+        }
 
         event.setUpdatedAt(Instant.now());
-
         eventRepository.save(event);
 
         return new ApiSuccessResponse(
                 true,
-                "Event updated successfully");
+                "Event updated successfully"
+        );
     }
 
     public ApiSuccessResponse deleteEvent(UUID eventId){

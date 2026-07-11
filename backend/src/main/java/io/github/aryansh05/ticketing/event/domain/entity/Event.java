@@ -1,10 +1,7 @@
 package io.github.aryansh05.ticketing.event.domain.entity;
 
 import com.github.f4b6a3.uuid.UuidCreator;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -19,7 +16,18 @@ import java.util.UUID;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "events")
+@Table(name = "events",
+uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uq_event_creator_title_start",
+                columnNames = {
+                        "event_created_by",
+                        "event_title",
+                        "event_start_time"
+                }
+        )
+}
+)
 public class Event {
     @Id
     @Builder.Default
@@ -28,7 +36,7 @@ public class Event {
     @Column(name = "event_created_by", nullable = false, updatable = false)
     private UUID userId;
 
-    @Column(name = "event_title", nullable = false, unique = true, length = 200)
+    @Column(name = "event_title", nullable = false, length = 200)
     private String title;
     @Column(name = "event_description", length = 1000)
     private String description;

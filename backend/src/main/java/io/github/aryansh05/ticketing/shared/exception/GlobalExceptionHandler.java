@@ -124,7 +124,7 @@ public class GlobalExceptionHandler {
                         false,
                         HttpStatus.INTERNAL_SERVER_ERROR.value(),
                         HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                        "Oops! Something went wrong",
+                        "Oops, Something went wrong",
                         null
                 ));
     }

@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public record CreateEventRequest(
     @NotBlank(message = "Title is required")
@@ -20,10 +21,6 @@ public record CreateEventRequest(
     Instant endTime
 ) {
     public CreateEventRequest{
-        if(startTime != null && endTime != null && !endTime.isAfter(startTime)){
-            throw new IllegalArgumentException("End time must be after start time");
-        }
-
         if (title != null) {
             title = title.trim();
         }
@@ -31,5 +28,18 @@ public record CreateEventRequest(
         if (description != null) {
             description = description.trim();
         }
+
+        if (startTime != null) {
+            startTime = startTime.truncatedTo(ChronoUnit.MINUTES);
+        }
+
+        if (endTime != null) {
+            endTime = endTime.truncatedTo(ChronoUnit.MINUTES);
+        }
+
+        if(startTime != null && endTime != null && !endTime.isAfter(startTime)){
+            throw new IllegalArgumentException("End time must be after start time");
+        }
+
     }
 }
